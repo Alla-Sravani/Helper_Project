@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="toolbar">
+    <input [(ngModel)]="searchTerm" (input)="onSearchChange()" placeholder="Search helpers..." />
+
+    <select [(ngModel)]="sortOrder" (change)="onSortChange(sortOrder)">
+      <option value="asc">Sort A-Z</option>
+      <option value="desc">Sort Z-A</option>
+    </select>
+
+    <span>{{ filteredCount }} of {{ totalCount }} helpers</span>
+  </div>
+
+  <div class="helper-list">
+    <div
+      class="helper-card"
+      *ngFor="let helper of helpers"
+      (click)="selectHelper(helper)"
+      [class.selected]="selectedHelper?._id === helper._id"
+    >
+      <img [src]="helper.photoUrl" alt="Photo" />
+      <div class="info">
+        <h3>{{ helper.fullName }}</h3>
+        <p>{{ helper.serviceType }}</p>
+        <p>{{ helper.phone }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="helper-details" *ngIf="selectedHelper">
+    <h2>{{ selectedHelper.fullName }}</h2>
+    <p><strong>Phone:</strong> {{ selectedHelper.phone }}</p>
+    <p><strong>Service:</strong> {{ selectedHelper.serviceType }}</p>
+    <p><strong>Languages:</strong> {{ selectedHelper.languages.join(', ') }}</p>
+    <p><strong>Vehicle:</strong> {{ selectedHelper.vehicleType }}</p>
+    <p><strong>Address:</strong> {{ selectedHelper.address }}</p>
+    <a [href]="selectedHelper.kycDocumentUrl" target="_blank">View KYC</a>
+  </div>
+</div>
+

@@ -1,0 +1,80 @@
+<div class="form-wrapper">
+  <!-- Left Step Indicator -->
+  <div class="stepper">
+    <ul>
+      <li class="active">Helper Details</li>
+      <li>Documents</li>
+      <li>Review</li>
+    </ul>
+  </div>
+
+  <!-- Right Form -->
+  <div class="form-section">
+    <h2>Add Helper</h2>
+
+    <form (ngSubmit)="submitForm()">
+      <div class="form-group">
+        <label>Upload Photo</label>
+        <input type="file" (change)="onFileChange($event, 'photo')" />
+        <small>Upload photo (.png, .jpeg) size 5 MB</small>
+      </div>
+
+      <div class="form-group">
+        <label>Type of Service*</label>
+        <select [(ngModel)]="form.serviceType" name="serviceType" required>
+          <option value="">Select</option>
+          <option>Cook</option>
+          <option>Driver</option>
+          <option>Cleaner</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Organization Name*</label>
+        <input type="text" [(ngModel)]="form.organization" name="organization" required />
+      </div>
+
+      <div class="form-group">
+        <label>Full Name*</label>
+        <input type="text" [(ngModel)]="form.fullName" name="fullName" required />
+      </div>
+
+      <div class="form-group">
+        <label>Languages*</label>
+        <select multiple [(ngModel)]="selectedLanguages" name="languages">
+          <option value="English">English</option>
+          <option value="Hindi">Hindi</option>
+          <option value="Telugu">Telugu</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Gender*</label>
+        <label><input type="radio" name="gender" value="Male" [(ngModel)]="form.gender" /> Male</label>
+        <label><input type="radio" name="gender" value="Female" [(ngModel)]="form.gender" /> Female</label>
+        <label><input type="radio" name="gender" value="Other" [(ngModel)]="form.gender" /> Other</label>
+      </div>
+
+      <div class="form-group">
+        <label>Phone*</label>
+        <input type="tel" [(ngModel)]="form.phone" name="phone" placeholder="+91" required />
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="form.email" name="email" placeholder="example@abc.com" />
+      </div>
+
+      <div class="form-group">
+        <label>Choose Vehicle Type</label>
+        <select [(ngModel)]="form.vehicleType" name="vehicleType">
+          <option value="">None</option>
+          <option value="2-wheeler">2-wheeler</option>
+          <option value="4-wheeler">4-wheeler</option>
+        </select>
+      </div>
+
+      <button type="submit">{{ isEditMode ? 'Update' : 'Add' }} Helper</button>
+    </form>
+  </div>
+</div>
