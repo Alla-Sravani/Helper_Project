@@ -86,3 +86,8 @@ button:hover {
   background: #125ea8;
 }
 
+.error {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
+}

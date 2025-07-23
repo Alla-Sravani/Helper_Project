@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HelperService } from '../../services/helper.service';
@@ -49,4 +50,3 @@ export class HelperListComponent implements OnInit {
     this.selectedHelper = helper;
   }
 }
-
