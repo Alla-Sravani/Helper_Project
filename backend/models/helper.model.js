@@ -1,9 +1,17 @@
 const mongoose = require('mongoose');
 
 const helperSchema = new mongoose.Schema({
-  fullName: { type: String, required: true },
+  employeeCode: {
+    type: String,
+    required: true,
+    unique: true, // optional: ensures uniqueness
+    trim: true
+  },
+  fullName: { type: String, required: true, trim: true },
   serviceType: { type: String, required: true },
   organization: { type: String, required: true },
+  address: { type: String, required: true },
+
   languages: {
     type: [String],
     enum: ['English', 'Hindi', 'Telugu', 'Tamil', 'Kannada'],
