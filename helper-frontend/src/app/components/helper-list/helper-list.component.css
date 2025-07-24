@@ -1,13 +1,19 @@
-.helper-container {
-  padding: 16px;
+/* Page wrapper to organize toolbar + content */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
+/* Toolbar styles */
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
+  z-index: 10;
 }
 
 .toolbar-left {
@@ -21,43 +27,137 @@
   align-items: center;
 }
 
-.main-layout {
-  display: flex;
-  height: 80vh;
-  gap: 16px;
-}
-
-.left-panel {
-  width: 300px;
-  overflow-y: auto;
-  border-right: 1px solid #ccc;
-}
-
-.right-panel {
-  flex: 1;
-}
-
-.avatar-circle {
-  background-color: #e0e0e0;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 40px;
-  font-weight: bold;
-}
-.action-buttons {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  gap: 8px; 
-}
 .helper-count {
-  margin-left: 16px;
   font-weight: 500;
   color: #555;
-  align-self: center;
   white-space: nowrap;
 }
+
+.search-field,
+.sort-field {
+  width: 160px;
+}
+
+/* Main layout under toolbar */
+.helper-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Left Panel - List */
+.helper-list-panel {
+  width: 25%;
+  padding: 1rem;
+  border-right: 1px solid #ccc;
+  background-color: #f9f9f9;
+  overflow-y: auto;
+}
+
+/* Right Panel - Details */
+.helper-detail-panel {
+  width: 75%;
+  padding: 2rem;
+  overflow-y: auto;
+  background-color: #fff;
+}
+
+
+
+/* Each Helper */
+.helper-item {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem;
+  margin-bottom: 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #f1f1f1;
+  transition: background-color 0.2s ease;
+}
+
+.helper-item:hover {
+  background-color: #e6e6e6;
+}
+
+.helper-item.active {
+  background-color: #d0d7ff;
+}
+
+/* Profile circle */
+.circle-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.circle-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.circle-photo span {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+/* Name beside circle */
+.helper-name {
+  margin-left: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+
+.left-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: #f9f9f9;
+}
+
+.helper-photo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+.helper-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.helper-details h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.helper-details h4 {
+  margin: 0;
+  font-size: 14px;
+  color: gray;
+}
+
+.edit-delete-buttons {
+  display: flex;
+  gap: 8px;
+}
+
 
 

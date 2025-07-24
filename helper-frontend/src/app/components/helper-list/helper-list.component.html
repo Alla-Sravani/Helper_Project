@@ -1,4 +1,4 @@
-<div class="helper-container">
+<div class="page-wrapper">
   <!-- Top Toolbar -->
   <div class="toolbar mat-elevation-z2">
     <div class="toolbar-left">
@@ -21,8 +21,8 @@
           <mat-option value="desc">Z-A</mat-option>
         </mat-select>
       </mat-form-field>
-      <span class="helper-count">{{ filteredCount }} of {{ totalCount }} helpers</span>
 
+      <span class="helper-count">{{ filteredCount }} of {{ totalCount }} helpers</span>
     </div>
 
     <div class="toolbar-right">
@@ -31,56 +31,72 @@
         Add Helper
       </button>
     </div>
-
   </div>
 
   <!-- Main Layout -->
-  <div class="main-layout">
-    <!-- Left: Helper List -->
-    <div class="left-panel">
-      <mat-list>
-        <mat-list-item *ngFor="let helper of helpers" (click)="selectHelper(helper)"
-          [class.selected]="selectedHelper?._id === helper._id">
-          <div matListAvatar class="avatar-circle">
-            {{ helper.fullName.charAt(0) }}
-          </div>
-          <div class="mat-line">{{ helper.fullName }}</div>
-          <div class="mat-line secondary">{{ helper.serviceType }}</div>
-        </mat-list-item>
-      </mat-list>
+  <div class="helper-container">
+    <!-- Left Panel -->
+    <div class="helper-list-panel">
+      <div class="helper-item" *ngFor="let helper of helpers" (click)="selectHelper(helper)"
+        [class.active]="selectedHelper?._id === helper._id">
+        <div class="circle-photo">
+          <img *ngIf="helper.photoUrl" [src]="'http://localhost:3000/' + helper.photoUrl" alt="{{ helper.fullName }}" />
+          <span *ngIf="!helper.photoUrl">{{ helper.fullName.charAt(0) }}</span>
+        </div>
+        <div class="helper-name">{{ helper.fullName }}</div>
+      </div>
     </div>
 
-    <!-- Right: Helper Details -->
-    <div class="right-panel" *ngIf="selectedHelper">
-      <mat-card>
-        <mat-card-title>{{ selectedHelper.fullName }}</mat-card-title>
-        <mat-card-actions align="end">
-          <button mat-icon-button color="primary" [routerLink]="['/helpers/edit', selectedHelper._id]">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteHelper(selectedHelper._id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-card-actions>
-        <mat-card-content>
-          <p><strong>Employee ID:</strong> {{ selectedHelper.employeeCode }}</p>
-          <p><strong>Phone:</strong> {{ selectedHelper.phone }}</p>
-          <p><strong>Service:</strong> {{ selectedHelper.serviceType }}</p>
-          <p><strong>Languages:</strong> {{ selectedHelper.languages.join(', ') }}</p>
-          <p><strong>Vehicle:</strong> {{ selectedHelper.vehicleType }}</p>
-          <p><strong>Address:</strong> {{ selectedHelper.address }}</p>
-          <p><strong>KYC Document:</strong> <a [href]="selectedHelper.kycDocumentUrl" target="_blank">View</a></p>
-        </mat-card-content>
+    <!-- Right Panel -->
+    <div class="helper-detail-panel">
+      <ng-container *ngIf="selectedHelper; else noSelection">
+        <div class="left-group">
+  <!-- Left: Photo + Name + Service -->
+  <div class="helper-photo">
+    <div class="circle-photo">
+      <img *ngIf="selectedHelper.photoUrl"
+           [src]="'http://localhost:3000/' + selectedHelper.photoUrl"
+           alt="{{ selectedHelper.fullName }}" />
+      <span *ngIf="!selectedHelper.photoUrl">{{ selectedHelper.fullName.charAt(0) }}</span>
+    </div>
 
-        <!-- <mat-card-actions align="end">
-          <button mat-icon-button color="primary" [routerLink]="['/helpers/edit', selectedHelper._id]">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteHelper(selectedHelper._id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-card-actions> -->
-      </mat-card>
+    <!-- Name and Service stacked vertically -->
+    <div class="helper-details">
+      <h2>{{ selectedHelper.fullName }}</h2>
+      <h4>{{ selectedHelper.serviceType }}</h4>
+    </div>
+  </div>
+
+  <!-- Right: Buttons -->
+  <div class="edit-delete-buttons">
+    <mat-card-actions>
+      <button mat-icon-button color="primary" [routerLink]="['/helpers/edit', selectedHelper._id]">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="deleteHelper(selectedHelper._id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-actions>
+  </div>
+</div>
+
+        <p><strong>Employee ID:</strong> {{ selectedHelper._id }}</p>
+        <p><strong>Phone:</strong> {{ selectedHelper.phone }}</p>
+        <p><strong>Service:</strong> {{ selectedHelper.serviceType }}</p>
+        <p><strong>Languages:</strong> {{ selectedHelper.languages?.join(', ') }}</p>
+        <p><strong>Vehicle:</strong> {{ selectedHelper.vehicleType }}</p>
+        <p><strong>Organization:</strong> {{ selectedHelper.organization }}</p>
+        <p><strong>Address:</strong> {{ selectedHelper.address }}</p>
+        <p>
+          <strong>KYC Document:</strong>
+          <a *ngIf="selectedHelper.kycDocumentUrl" [href]="'http://localhost:3000/' + selectedHelper.kycDocumentUrl"
+            target="_blank">View</a>
+        </p>
+      </ng-container>
+
+      <ng-template #noSelection>
+        <p>Please select a helper to see details.</p>
+      </ng-template>
     </div>
   </div>
 </div>

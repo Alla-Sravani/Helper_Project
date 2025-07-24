@@ -1,22 +1,41 @@
-<div class="form-wrapper">
-  <!-- Left Step Indicator -->
-  <div class="stepper">
-    <ul>
-      <li class="active">Helper Details</li>
-      <li>Documents</li>
-      <li>Review</li>
-    </ul>
+<div class="form-container-box">
+  <!-- Left Stepper Box -->
+  <div class="stepper-box">
+    <div class="vertical-stepper">
+      <div class="step" [class.active]="currentStep === 1">
+        <div class="circle">1</div>
+        <div class="label">Helper Details</div>
+      </div>
+      <div class="line"></div>
+      <div class="step" [class.active]="currentStep === 2">
+        <div class="circle">2</div>
+        <div class="label">Documents</div>
+      </div>
+      <div class="line"></div>
+      <div class="step" [class.active]="currentStep === 3">
+        <div class="circle">3</div>
+        <div class="label">Review</div>
+      </div>
+    </div>
   </div>
 
-  <!-- Right Form -->
-  <div class="form-section">
+  <!-- Right Form Section Box -->
+  <div class="form-section-box">
     <h2>{{ isEditMode ? 'Edit Helper' : 'Add Helper' }}</h2>
 
     <form [formGroup]="form" (ngSubmit)="submitForm()">
-      <div class="form-group">
-        <label>Upload Photo</label>
-        <input type="file" (change)="onFileChange($event, 'photo')" />
-        <small>Upload photo (.png, .jpeg) size 5 MB</small>
+      <div class="photo-upload-wrapper">
+        <div class="photo-circle">
+          <img *ngIf="photoPreview" [src]="photoPreview" alt="Photo Preview" />
+          <mat-icon *ngIf="!photoPreview" class="upload-icon">cloud_upload</mat-icon>
+        </div>
+        <div class="photo-upload-info">
+          <label class="photo-upload-label">
+            Upload Photo
+            <input type="file" (change)="onFileChange($event, 'photo')" hidden />
+          </label>
+          <small class="photo-hint">Upload photo (.png, .jpeg) size 5 mb</small>
+        </div>
       </div>
 
       <div class="form-group">
@@ -49,28 +68,26 @@
       </div>
 
       <div class="form-group">
-        <div class="form-group">
-  <mat-form-field appearance="outline">
-    <mat-label>Languages*</mat-label>
-    <mat-select formControlName="languages" multiple>
-      <mat-option value="English">English</mat-option>
-      <mat-option value="Hindi">Hindi</mat-option>
-      <mat-option value="Telugu">Telugu</mat-option>
-    </mat-select>
-    <mat-error *ngIf="form.get('languages')?.invalid && form.get('languages')?.touched">
-      At least one language is required.
-    </mat-error>
-  </mat-form-field>
-</div>
-
+        <mat-form-field appearance="outline">
+          <mat-label>Languages*</mat-label>
+          <mat-select formControlName="languages" multiple>
+            <mat-option value="English">English</mat-option>
+            <mat-option value="Hindi">Hindi</mat-option>
+            <mat-option value="Telugu">Telugu</mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('languages')?.invalid && form.get('languages')?.touched">
+            At least one language is required.
+          </mat-error>
+        </mat-form-field>
       </div>
+
       <div class="form-group">
-  <label>Address*</label>
-  <input type="text" formControlName="address" />
-  <div *ngIf="form.get('address')?.invalid && form.get('address')?.touched" class="error">
-    Address is required.
-  </div>
-</div>
+        <label>Address*</label>
+        <input type="text" formControlName="address" />
+        <div *ngIf="form.get('address')?.invalid && form.get('address')?.touched" class="error">
+          Address is required.
+        </div>
+      </div>
 
       <div class="form-group">
         <label>Gender*</label>
@@ -107,13 +124,19 @@
         </select>
       </div>
 
-      <div class="form-group">
-        <label>Upload KYC Document</label>
-        <input type="file" (change)="onFileChange($event, 'kyc')" />
+      <div class="kyc-upload-wrapper">
+        <div class="kyc-box">
+          <img *ngIf="kycPreview" [src]="kycPreview" alt="KYC Preview" />
+          <mat-icon *ngIf="!kycPreview" class="upload-icon">insert_drive_file</mat-icon>
+        </div>
+        <label class="kyc-upload-label">
+          Upload KYC Document
+          <input type="file" (change)="onFileChange($event, 'kyc')" hidden />
+        </label>
+        <small class="kyc-hint">Upload document (.png, .jpeg, .pdf) size 5 mb</small>
       </div>
 
-      <button type="submit" (click)="debug()">{{ isEditMode ? 'Update' : 'Add' }} Helper
-  </button>
+      <button type="submit">{{ isEditMode ? 'Update' : 'Add' }} Helper</button>
     </form>
   </div>
 </div>

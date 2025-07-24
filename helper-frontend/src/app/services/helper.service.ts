@@ -28,6 +28,8 @@ export class HelperService {
   }
 
   updateHelper(id: string, formData: FormData): Observable<any> {
+    console.log('Updating helper with ID:', id);
+    console.log('Form data:', formData);
     return this.http.put(`${this.apiUrl}/${id}`, formData);
   }
 
