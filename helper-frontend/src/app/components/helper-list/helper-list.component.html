@@ -51,47 +51,135 @@
     <div class="helper-detail-panel">
       <ng-container *ngIf="selectedHelper; else noSelection">
         <div class="left-group">
-  <!-- Left: Photo + Name + Service -->
-  <div class="helper-photo">
-    <div class="circle-photo">
-      <img *ngIf="selectedHelper.photoUrl"
-           [src]="'http://localhost:3000/' + selectedHelper.photoUrl"
-           alt="{{ selectedHelper.fullName }}" />
-      <span *ngIf="!selectedHelper.photoUrl">{{ selectedHelper.fullName.charAt(0) }}</span>
+          <!-- Left: Photo + Name + Service -->
+          <div class="helper-photo">
+            <div class="circle-photo">
+              <img *ngIf="selectedHelper.photoUrl" [src]="'http://localhost:3000/' + selectedHelper.photoUrl"
+                alt="{{ selectedHelper.fullName }}" />
+              <span *ngIf="!selectedHelper.photoUrl">{{ selectedHelper.fullName.charAt(0) }}</span>
+            </div>
+
+            <!-- Name and Service stacked vertically -->
+            <div class="helper-details">
+              <h2>{{ selectedHelper.fullName }}</h2>
+              <h4>{{ selectedHelper.serviceType }}</h4>
+            </div>
+          </div>
+
+          <!-- Right: Buttons -->
+          <div class="edit-delete-buttons">
+            <mat-card-actions>
+              <button mat-icon-button color="primary" [routerLink]="['/helpers/edit', selectedHelper._id]">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteHelper(selectedHelper._id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-card-actions>
+          </div>
+        </div>
+
+
+        <div class="details-container">
+          <!-- <h2 class="name-role">
+    {{ selectedHelper?.fullName }}
+    <span class="role">{{ selectedHelper?.serviceType }}</span>
+  </h2> -->
+          <!-- EMPLOYEE DETAILS -->
+          <!-- EMPLOYEE ID SECTION -->
+<!-- EMPLOYEE DETAILS -->
+<div class="details-section">
+  <div class="section-divider"><span>Employee ID</span></div>
+
+  <div class="info-grid">
+    <div class="info-row">
+      <div class="label">Identification Card</div>
+      <div class="colon">:</div>
+      <div class="value">
+       <a *ngIf="selectedHelper.photoUrl" [href]="'http://localhost:3000/' + selectedHelper.photoUrl"
+            target="_blank">View</a>
+        <span *ngIf="!selectedHelper?.photoUrl"></span>
+      </div>
     </div>
 
-    <!-- Name and Service stacked vertically -->
-    <div class="helper-details">
-      <h2>{{ selectedHelper.fullName }}</h2>
-      <h4>{{ selectedHelper.serviceType }}</h4>
+    <div class="info-row">
+      <div class="label">Employee Code</div>
+      <div class="colon">:</div>
+      <div class="value">{{ selectedHelper?.employeeCode || '-' }}</div>
     </div>
-  </div>
-
-  <!-- Right: Buttons -->
-  <div class="edit-delete-buttons">
-    <mat-card-actions>
-      <button mat-icon-button color="primary" [routerLink]="['/helpers/edit', selectedHelper._id]">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button color="warn" (click)="deleteHelper(selectedHelper._id)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </mat-card-actions>
   </div>
 </div>
 
-        <p><strong>Employee ID:</strong> {{ selectedHelper._id }}</p>
-        <p><strong>Phone:</strong> {{ selectedHelper.phone }}</p>
-        <p><strong>Service:</strong> {{ selectedHelper.serviceType }}</p>
-        <p><strong>Languages:</strong> {{ selectedHelper.languages?.join(', ') }}</p>
-        <p><strong>Vehicle:</strong> {{ selectedHelper.vehicleType }}</p>
-        <p><strong>Organization:</strong> {{ selectedHelper.organization }}</p>
-        <p><strong>Address:</strong> {{ selectedHelper.address }}</p>
-        <p>
-          <strong>KYC Document:</strong>
-          <a *ngIf="selectedHelper.kycDocumentUrl" [href]="'http://localhost:3000/' + selectedHelper.kycDocumentUrl"
+<!-- PERSONAL DETAILS -->
+<div class="details-section">
+  <div class="section-divider"><span>Personal Details</span></div>
+
+  <div class="info-grid">
+    <div class="info-row">
+      <div class="label">Gender</div>
+      <div class="colon">:</div>
+      <div class="value">{{ selectedHelper?.gender || '-' }}</div>
+    </div>
+
+    <div class="info-row">
+      <div class="label">Language(s)</div>
+      <div class="colon">:</div>
+      <div class="value">{{ selectedHelper?.languages?.join(', ') || '-' }}</div>
+    </div>
+
+    <div class="info-row">
+      <div class="label">Mobile No.</div>
+      <div class="colon">:</div>
+      <div class="value">{{ selectedHelper?.phone || '-' }}</div>
+    </div>
+
+    <div class="info-row">
+      <div class="label">Email ID</div>
+      <div class="colon">:</div>
+      <div class="value">{{ selectedHelper?.email || '-' }}</div>
+    </div>
+
+    <div class="info-row">
+      <div class="label">KYC Document</div>
+      <div class="colon">:</div>
+      <div class="value">
+        <a *ngIf="selectedHelper.kycDocumentUrl" [href]="'http://localhost:3000/' + selectedHelper.kycDocumentUrl"
             target="_blank">View</a>
-        </p>
+        <span *ngIf="!selectedHelper?.kycUrl"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICE DETAILS -->
+<div class="details-section">
+  <div class="section-divider"><span>Service Details</span></div>
+
+  <div class="info-grid">
+    <div class="info-row">
+      <div class="label">Type</div>
+      <div class="colon">:</div>
+      <div class="value">{{ selectedHelper?.serviceType || '-' }}</div>
+    </div>
+
+    <div class="info-row">
+      <div class="label">Organization</div>
+      <div class="colon">:</div>
+      <div class="value">{{ selectedHelper?.organization || '-' }}</div>
+    </div>
+
+    <div class="info-row">
+      <div class="label">Address</div>
+      <div class="colon">:</div>
+      <div class="value">{{ selectedHelper?.address || '-' }}</div>
+    </div>
+  </div>
+</div>
+
+
+
+        </div>
+
       </ng-container>
 
       <ng-template #noSelection>

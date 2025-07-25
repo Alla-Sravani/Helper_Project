@@ -1,22 +1,12 @@
 <div class="form-container-box">
   <!-- Left Stepper Box -->
   <div class="stepper-box">
-    <div class="vertical-stepper">
-      <div class="step" [class.active]="currentStep === 1">
-        <div class="circle">1</div>
-        <div class="label">Helper Details</div>
-      </div>
-      <div class="line"></div>
-      <div class="step" [class.active]="currentStep === 2">
-        <div class="circle">2</div>
-        <div class="label">Documents</div>
-      </div>
-      <div class="line"></div>
-      <div class="step" [class.active]="currentStep === 3">
-        <div class="circle">3</div>
-        <div class="label">Review</div>
-      </div>
-    </div>
+   <mat-vertical-stepper [linear]="false" [selectedIndex]="currentStep - 1" class="custom-stepper">
+  <mat-step label="Helper Details" [completed]="currentStep > 1"></mat-step>
+  <mat-step label="Documents" [completed]="currentStep > 2"></mat-step>
+  <mat-step label="Review"></mat-step>
+</mat-vertical-stepper>
+
   </div>
 
   <!-- Step 1 & 2: Form Section -->

@@ -297,3 +297,13 @@ button:hover {
   background-color: #ccc;
   margin: 8px 0;
 }
+
+::ng-deep .custom-stepper {
+  margin-right: 24px;
+  min-width: 200px;
+}
+
+::ng-deep .mat-step-header .mat-step-label {
+  font-size: 14px;
+}
+

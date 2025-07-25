@@ -107,6 +107,7 @@ router.get('/:id', async (req, res) => {
 
 // PUT: Update helper details (with optional new photo/KYC)
 router.put('/:id', upload.fields([{ name: 'photo' }, { name: 'kyc' }]), async (req, res) => {
+  
   try {
     const updateData = {
       employeeCode: req.body.employeeCode?.trim(),

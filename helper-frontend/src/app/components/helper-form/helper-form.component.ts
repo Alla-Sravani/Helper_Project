@@ -9,6 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatStepperModule } from '@angular/material/stepper';
+
 
 @Component({
   selector: 'app-helper-form',
@@ -21,7 +23,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatSelectModule,
     MatOptionModule,
-    MatIconModule
+    MatIconModule,
+    MatStepperModule
   ],
   templateUrl: './helper-form.component.html',
   styleUrls: ['./helper-form.component.scss']
@@ -51,7 +54,7 @@ export class HelperFormComponent implements OnInit {
 
     this.form = this.fb.group({
       fullName: ['', Validators.required],
-      // employeeCode: ['', Validators.required],
+      employeeCode: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
       email: ['', [Validators.email]],
       address: ['', Validators.required],
