@@ -10,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 
-
 @Component({
   selector: 'app-helper-form',
   standalone: true,
@@ -33,8 +32,11 @@ export class HelperFormComponent implements OnInit {
   id = '';
   filePhoto!: File;
   fileKyc!: File;
-  currentStep = 1; 
+  currentStep = 1;
   isPreviewMode = false;
+
+  photoPreview: string | ArrayBuffer | null = null;
+  kycPreview: string | ArrayBuffer | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -49,7 +51,7 @@ export class HelperFormComponent implements OnInit {
 
     this.form = this.fb.group({
       fullName: ['', Validators.required],
-      employeeCode: [''], // Add employeeCode if needed
+      // employeeCode: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
       email: ['', [Validators.email]],
       address: ['', Validators.required],
@@ -74,40 +76,46 @@ export class HelperFormComponent implements OnInit {
     }
   }
 
-  photoPreview: string | ArrayBuffer | null = null;
-  kycPreview: string | ArrayBuffer | null = null;
+  onFileChange(event: any, type: 'photo' | 'kyc') {
+    const file = event.target.files[0];
+    if (!file) return;
 
-onFileChange(event: any, type: 'photo' | 'kyc') {
-  const file = event.target.files[0];
-  if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (type === 'photo') {
+        this.photoPreview = reader.result;
+        this.filePhoto = file;
+      } else {
+        this.kycPreview = reader.result;
+        this.fileKyc = file;
+      }
+    };
+    reader.readAsDataURL(file);
+  }
 
-  const reader = new FileReader();
-  reader.onload = () => {
-    if (type === 'photo') {
-      this.photoPreview = reader.result;
-      this.filePhoto = file;
-    } else {
-     this.kycPreview= reader.result;
-      this.fileKyc = file;
-    }
-  };
-  reader.readAsDataURL(file);
-}
-
-
+  // First Submit → Move to Preview Step
   submitForm() {
     if (this.form.invalid) {
-      console.warn('❌ Form is invalid');
-      Object.entries(this.form.controls).forEach(([key, control]) => {
-        if (control.invalid) {
-          console.warn(`🔴 Field "${key}" is invalid:`, control.errors);
-        }
-      });
-      this.form.markAllAsTouched();
-      return;
-    }
+    console.warn('❌ Form is invalid. Errors:');
+    Object.entries(this.form.controls).forEach(([key, control]) => {
+      if (control.invalid) {
+        console.error(`🔴 ${key} is invalid`, control.errors);
+      }
+    });
 
+    this.form.markAllAsTouched(); // Trigger red validation errors in UI
+    return;
+  }
+    //console.log('🟡 submitForm triggered');
+
+    this.currentStep = 3;
+    this.isPreviewMode = true;
+  }
+
+  // Final Submit to Backend
+  finalSubmit() {
     const formData = new FormData();
+
     for (const key in this.form.value) {
       const value = this.form.value[key];
       if (key === 'languages') continue;
@@ -124,7 +132,6 @@ onFileChange(event: any, type: 'photo' | 'kyc') {
       this.helperService.updateHelper(this.id, formData).subscribe(() => {
         alert('✅ Helper updated!');
         this.router.navigate(['/helpers']);
-        
       });
     } else {
       this.helperService.addHelper(formData).subscribe(() => {

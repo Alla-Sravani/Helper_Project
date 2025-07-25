@@ -19,8 +19,8 @@
     </div>
   </div>
 
-  <!-- Right Form Section Box -->
-  <div class="form-section-box">
+  <!-- Step 1 & 2: Form Section -->
+  <div class="form-section-box" *ngIf="currentStep !== 3">
     <h2>{{ isEditMode ? 'Edit Helper' : 'Add Helper' }}</h2>
 
     <form [formGroup]="form" (ngSubmit)="submitForm()">
@@ -136,7 +136,35 @@
         <small class="kyc-hint">Upload document (.png, .jpeg, .pdf) size 5 mb</small>
       </div>
 
-      <button type="submit">{{ isEditMode ? 'Update' : 'Add' }} Helper</button>
+      <button *ngIf="!isPreviewMode" type="submit">
+  {{ isEditMode ? 'Update' : 'Add' }} Helper
+</button>
+
+<!-- Show this button only in Preview Mode (Step 3) -->
+<button *ngIf="isPreviewMode" type="button" (click)="finalSubmit()">
+  Confirm & Submit
+</button>
     </form>
+  </div>
+
+  <!-- Step 3: Preview Section -->
+  <div class="form-section-box" *ngIf="currentStep === 3">
+    <h2>Preview Helper Details</h2>
+    <div class="preview-content">
+      <p><strong>Full Name:</strong> {{ form.value.fullName }}</p>
+      <p><strong>Phone:</strong> {{ form.value.phone }}</p>
+      <p><strong>Email:</strong> {{ form.value.email }}</p>
+      <p><strong>Address:</strong> {{ form.value.address }}</p>
+      <p><strong>Gender:</strong> {{ form.value.gender }}</p>
+      <p><strong>Organization:</strong> {{ form.value.organization }}</p>
+      <p><strong>Service Type:</strong> {{ form.value.serviceType }}</p>
+      <p><strong>Languages:</strong> {{ form.value.languages?.join(', ') }}</p>
+      <p><strong>Vehicle Type:</strong> {{ form.value.vehicleType || 'None' }}</p>
+
+      <div class="preview-actions">
+        <button (click)="currentStep = 1">Back to Edit</button>
+        <button (click)="finalSubmit()">Confirm & Submit</button>
+      </div>
+    </div>
   </div>
 </div>
