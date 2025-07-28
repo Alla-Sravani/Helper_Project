@@ -11,6 +11,11 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatStepperModule } from '@angular/material/stepper';
 
+import { MatDialog } from '@angular/material/dialog';
+import { UploadDialogComponent } from '../upload-dialog/upload-dialog.component';
+import { SuccessDialogComponent } from '../success-dialog/success-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SaveToastComponent } from '../save-toast/save-toast.component';
 
 @Component({
   selector: 'app-helper-form',
@@ -24,11 +29,15 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatSelectModule,
     MatOptionModule,
     MatIconModule,
-    MatStepperModule
+    MatStepperModule,
+    UploadDialogComponent,
+    SuccessDialogComponent,
+    SaveToastComponent
   ],
   templateUrl: './helper-form.component.html',
   styleUrls: ['./helper-form.component.scss']
 })
+
 export class HelperFormComponent implements OnInit {
   form!: FormGroup;
   isEditMode = false;
@@ -42,11 +51,49 @@ export class HelperFormComponent implements OnInit {
   kycPreview: string | ArrayBuffer | null = null;
 
   constructor(
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private fb: FormBuilder,
     private helperService: HelperService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
+
+  openUploadDialog() {
+    this.dialog.open(UploadDialogComponent, {
+      width: '400px',
+      disableClose: true
+    }).afterClosed().subscribe(result => {
+      if (result?.file && result?.type) {
+        // ✅ Set the selected file to upload later
+        this.fileKyc = result.file;
+
+        // ✅ Create a preview
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.kycPreview = reader.result;
+        };
+        reader.readAsDataURL(result.file);
+
+        // Optional: store document type if needed
+        // this.form.patchValue({ kycType: result.type });
+
+        console.log('✅ File:', result.file);
+        console.log('✅ Document Type:', result.type);
+      }
+    });
+  }
+
+  showSuccessDialog(helperName: string) {
+
+    const dialogRef = this.dialog.open(SuccessDialogComponent, {
+      data: { message: `${helperName} ` },
+      width: '400px',
+      panelClass: 'custom-success-dialog',
+      disableClose: true
+    });
+    setTimeout(() => dialogRef.close(), 3000);
+  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
@@ -54,7 +101,6 @@ export class HelperFormComponent implements OnInit {
 
     this.form = this.fb.group({
       fullName: ['', Validators.required],
-      employeeCode: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
       email: ['', [Validators.email]],
       address: ['', Validators.required],
@@ -99,16 +145,19 @@ export class HelperFormComponent implements OnInit {
   // First Submit → Move to Preview Step
   submitForm() {
     if (this.form.invalid) {
-    console.warn('❌ Form is invalid. Errors:');
-    Object.entries(this.form.controls).forEach(([key, control]) => {
-      if (control.invalid) {
-        console.error(`🔴 ${key} is invalid`, control.errors);
-      }
-    });
+      // Log errors to console
+      console.log(this.form.errors);
+      console.log(this.form.value);
+      console.warn('❌ Form is invalid. Errors:');
+      Object.entries(this.form.controls).forEach(([key, control]) => {
+        if (control.invalid) {
+          console.error(`🔴 ${key} is invalid`, control.errors);
+        }
+      });
 
-    this.form.markAllAsTouched(); // Trigger red validation errors in UI
-    return;
-  }
+      this.form.markAllAsTouched(); // Trigger red validation errors in UI
+      return;
+    }
     //console.log('🟡 submitForm triggered');
 
     this.currentStep = 3;
@@ -133,14 +182,25 @@ export class HelperFormComponent implements OnInit {
 
     if (this.isEditMode) {
       this.helperService.updateHelper(this.id, formData).subscribe(() => {
-        alert('✅ Helper updated!');
+        //alert('✅ Helper updated!');
+        //this.showSuccessDialog(this.form.value.fullName);
+        this.snackBar.openFromComponent(SaveToastComponent, {
+          duration: 3000,
+          data: { message: 'Changes saved!' },
+          horizontalPosition: 'right',
+          verticalPosition: 'bottom',
+          panelClass: ['custom-toast-panel'] // important!
+        });
+
         this.router.navigate(['/helpers']);
       });
     } else {
       this.helperService.addHelper(formData).subscribe(() => {
-        alert('✅ Helper added!');
+        //alert('✅ Helper added!');
+        this.showSuccessDialog(this.form.value.fullName);
         this.router.navigate(['/helpers']);
       });
     }
+
   }
 }

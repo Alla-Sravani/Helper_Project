@@ -1,0 +1,44 @@
+.delete-dialog {
+  padding: 24px;
+  max-width: 400px;
+  position: relative;
+  text-align: center;
+
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+
+  .icon-section {
+    margin-bottom: 12px;
+  }
+
+  .warning-icon {
+    color: #f44336;
+    font-size: 25px;
+  }
+
+  .delete-title {
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #d32f2f;
+
+    .highlight {
+      font-weight: 700;
+    }
+  }
+
+  .subtext {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+}

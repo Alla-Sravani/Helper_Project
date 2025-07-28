@@ -1,13 +1,38 @@
 <div class="form-container-box">
   <!-- Left Stepper Box -->
   <div class="stepper-box">
-   <mat-vertical-stepper [linear]="false" [selectedIndex]="currentStep - 1" class="custom-stepper">
-  <mat-step label="Helper Details" [completed]="currentStep > 1"></mat-step>
-  <mat-step label="Documents" [completed]="currentStep > 2"></mat-step>
-  <mat-step label="Review"></mat-step>
-</mat-vertical-stepper>
+  <mat-vertical-stepper [linear]="false" [selectedIndex]="currentStep - 1" class="custom-stepper">
+    
+    <mat-step [completed]="currentStep > 1">
+      <ng-template matStepLabel>
+        <div>
+          <div class="step-title">Helper Details</div>
+          <div class="step-subtitle">Add helper details</div>
+        </div>
+      </ng-template>
+    </mat-step>
 
-  </div>
+    <mat-step [completed]="currentStep > 2">
+      <ng-template matStepLabel>
+        <div>
+          <div class="step-title">Documents</div>
+          <div class="step-subtitle">Upload related documents</div>
+        </div>
+      </ng-template>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>
+        <div>
+          <div class="step-title">Review</div>
+          <div class="step-subtitle">Check the info and confirm</div>
+        </div>
+      </ng-template>
+    </mat-step>
+
+  </mat-vertical-stepper>
+</div>
+
 
   <!-- Step 1 & 2: Form Section -->
   <div class="form-section-box" *ngIf="currentStep !== 3">
@@ -35,6 +60,9 @@
           <option>Cook</option>
           <option>Driver</option>
           <option>Cleaner</option>
+          <option>Babysitter</option>
+          <option>Gardener</option>
+          <option>nurse </option>
         </select>
         <div *ngIf="form.get('serviceType')?.invalid && form.get('serviceType')?.touched" class="error">
           Service type is required.
@@ -114,17 +142,15 @@
         </select>
       </div>
 
-      <div class="kyc-upload-wrapper">
-        <div class="kyc-box">
-          <img *ngIf="kycPreview" [src]="kycPreview" alt="KYC Preview" />
-          <mat-icon *ngIf="!kycPreview" class="upload-icon">insert_drive_file</mat-icon>
-        </div>
-        <label class="kyc-upload-label">
-          Upload KYC Document
-          <input type="file" (change)="onFileChange($event, 'kyc')" hidden />
-        </label>
-        <small class="kyc-hint">Upload document (.png, .jpeg, .pdf) size 5 mb</small>
-      </div>
+      <div class="kyc-upload-wrapper" (click)="openUploadDialog()">
+  <div class="kyc-box">
+    <img *ngIf="kycPreview" [src]="kycPreview" alt="KYC Preview" />
+    <mat-icon *ngIf="!kycPreview" class="upload-icon">insert_drive_file</mat-icon>
+  </div>
+  <label class="kyc-upload-label">Upload KYC Document</label>
+  <small class="kyc-hint">Upload document (.png, .jpeg, .pdf) size 5 mb</small>
+</div>
+
 
       <button *ngIf="!isPreviewMode" type="submit">
   {{ isEditMode ? 'Update' : 'Add' }} Helper

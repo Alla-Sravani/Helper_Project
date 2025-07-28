@@ -1,0 +1,20 @@
+<div class="delete-dialog">
+  <button mat-icon-button class="close-btn" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <div class="icon-section">
+    <mat-icon class="warning-icon">warning</mat-icon>
+  </div>
+
+  <h2 class="delete-title">
+    Delete <span class="highlight">{{ data.name }} ({{ data.role }})</span>
+  </h2>
+  <p class="subtext">You can’t undo this action.</p>
+
+  <div class="action-buttons">
+    <button mat-stroked-button (click)="closeDialog()">Cancel</button>
+    <button mat-flat-button color="warn" (click)="confirmDelete()">Delete</button>
+  </div>
+</div>
+

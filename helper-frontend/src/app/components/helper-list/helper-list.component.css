@@ -1,3 +1,16 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0 0 20px; /* top and left margin */
+}
+
+.more-icon {
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
 /* Page wrapper to organize toolbar + content */
 .page-wrapper {
   display: flex;
@@ -241,3 +254,8 @@
     text-decoration: underline;
   }
 }
+
+
+
+
+

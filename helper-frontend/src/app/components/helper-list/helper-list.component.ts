@@ -13,6 +13,11 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { MatCardModule } from '@angular/material/card';
 
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDeleteDialogComponent } from '../confirm-delete-dialog/confirm-delete-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+
 @Component({
   standalone: true,
   selector: 'app-helper-list',
@@ -28,7 +33,8 @@ import { MatCardModule } from '@angular/material/card';
   MatSelectModule,
   MatListModule,
   MatCardModule,
-  MatButtonModule
+  MatButtonModule,
+  ConfirmDeleteDialogComponent
   ]
 })
 export class HelperListComponent implements OnInit {
@@ -40,7 +46,7 @@ export class HelperListComponent implements OnInit {
   sortBy = 'fullName';
   sortOrder = 'asc';
 
-  constructor(private helperService: HelperService) {}
+  constructor(private dialog: MatDialog,private helperService: HelperService,private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.fetchHelpers();
@@ -71,14 +77,38 @@ export class HelperListComponent implements OnInit {
   }
 
   // ✅ ADD THIS METHOD BELOW
-  deleteHelper(id: string) {
-    if (confirm('Are you sure you want to delete this helper?')) {
-      this.helperService.deleteHelper(id).subscribe(() => {
-        this.fetchHelpers();  // Refresh the list
-        if (this.selectedHelper?._id === id) {
-          this.selectedHelper = null;
-        }
-      });
-    }
+
+  openDeleteDialog(helper: any) {
+  const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
+    data: helper,
+    width: '400px',
+    disableClose: true
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+  if (result === 'confirm') {
+    this.deleteHelper(helper._id);
   }
+});
+}
+  deleteHelper(id: string) {
+  const confirmed = confirm('Are you sure you want to delete this helper?');
+  if (!confirmed) return;
+
+  this.helperService.deleteHelper(id).subscribe(() => {
+    this.fetchHelpers();  // Refresh the list
+
+    // Reset selectedHelper if it was the one deleted
+    if (this.selectedHelper && this.selectedHelper._id === id) {
+      this.selectedHelper = null;
+    }
+
+    // Optionally show a toast
+    this.snackBar.open('Helper deleted successfully', 'Close', {
+      duration: 3000,
+      panelClass: 'success-snackbar'
+    });
+  });
+}
+
 }

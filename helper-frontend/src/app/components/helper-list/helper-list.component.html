@@ -1,3 +1,8 @@
+<div class="header-container">
+  <h1>Helpers</h1>
+  <div class="more-icon">&#8942;</div>
+</div>
+
 <div class="page-wrapper">
   <!-- Top Toolbar -->
   <div class="toolbar mat-elevation-z2">
@@ -38,13 +43,19 @@
     <!-- Left Panel -->
     <div class="helper-list-panel">
       <div class="helper-item" *ngFor="let helper of helpers" (click)="selectHelper(helper)"
-        [class.active]="selectedHelper?._id === helper._id">
-        <div class="circle-photo">
-          <img *ngIf="helper.photoUrl" [src]="'http://localhost:3000/' + helper.photoUrl" alt="{{ helper.fullName }}" />
-          <span *ngIf="!helper.photoUrl">{{ helper.fullName.charAt(0) }}</span>
-        </div>
-        <div class="helper-name">{{ helper.fullName }}</div>
-      </div>
+     [class.active]="selectedHelper?._id === helper._id">
+  
+  <div class="circle-photo">
+    <img *ngIf="helper.photoUrl" [src]="'http://localhost:3000/' + helper.photoUrl" alt="{{ helper.fullName }}" />
+    <span *ngIf="!helper.photoUrl">{{ helper.fullName.charAt(0) }}</span>
+  </div>
+
+  <div class="helper-details">
+              <h2>{{ helper.fullName }}</h2>
+              <h4>{{ helper.serviceType }}</h4>
+            </div>
+</div>
+
     </div>
 
     <!-- Right Panel -->
@@ -72,7 +83,7 @@
               <button mat-icon-button color="primary" [routerLink]="['/helpers/edit', selectedHelper._id]">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="deleteHelper(selectedHelper._id)">
+              <button mat-icon-button color="warn" (click)="openDeleteDialog(selectedHelper)">
                 <mat-icon>delete</mat-icon>
               </button>
             </mat-card-actions>
@@ -97,7 +108,8 @@
       <div class="colon">:</div>
       <div class="value">
        <a *ngIf="selectedHelper.photoUrl" [href]="'http://localhost:3000/' + selectedHelper.photoUrl"
-            target="_blank">View</a>
+            target="_blank">
+            <mat-icon inline style="vertical-align: middle;">visibility</mat-icon>View</a>
         <span *ngIf="!selectedHelper?.photoUrl"></span>
       </div>
     </div>
@@ -144,7 +156,8 @@
       <div class="colon">:</div>
       <div class="value">
         <a *ngIf="selectedHelper.kycDocumentUrl" [href]="'http://localhost:3000/' + selectedHelper.kycDocumentUrl"
-            target="_blank">View</a>
+            target="_blank">
+            <mat-icon inline style="vertical-align: middle;">visibility</mat-icon>View</a>
         <span *ngIf="!selectedHelper?.kycUrl"></span>
       </div>
     </div>
