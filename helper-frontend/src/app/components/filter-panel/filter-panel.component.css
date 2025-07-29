@@ -1,0 +1,18 @@
+.filter-panel {
+  width: 100%;
+  padding: 16px;
+
+  .filter-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+.filter-panel[_ngcontent-ng-c2441033107] {
+  padding: 0;
+}

@@ -1,0 +1,22 @@
+<div class="filter-panel">
+  <h3>Filter By</h3>
+
+  <mat-form-field appearance="fill" class="filter-field">
+    <mat-label>Service</mat-label>
+    <mat-select [(ngModel)]="selectedService">
+      <mat-option *ngFor="let service of services" [value]="service">{{ service }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="filter-field">
+    <mat-label>Organization</mat-label>
+    <mat-select [(ngModel)]="selectedOrganization">
+      <mat-option *ngFor="let org of organizations" [value]="org">{{ org }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="action-buttons">
+    <button mat-stroked-button color="primary" (click)="Onreset()">Reset</button>
+    <button mat-flat-button color="accent" (click)="Onapply()">Apply</button>
+  </div>
+</div>

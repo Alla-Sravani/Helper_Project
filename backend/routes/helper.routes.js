@@ -24,7 +24,7 @@ router.post('/', upload.fields([{ name: 'photo' }, { name: 'kyc' }]), async (req
   try {
     const photoPath = req.files?.photo?.[0]?.path || '';
     const kycPath = req.files?.kyc?.[0]?.path || '';
-    console.log('Photo path:', req.body);
+    console.log( req.body);
     req.body.employeeCode = Math.floor(Math.random() * 1000).toString(); // Generate a random employee code
 
     const newHelper = new Helper({
@@ -51,26 +51,56 @@ router.post('/', upload.fields([{ name: 'photo' }, { name: 'kyc' }]), async (req
   }
 });
 
-// GET: Search, Sort, Count helpers
+// GET: List all helpers with search, sort, and filter
+
 router.get('/', async (req, res) => {
+  console.log('Received GET request with query:', req.query);
   try {
-    const { search = '', sortBy = 'fullName', order = 'asc' } = req.query;
+    let {
+      search = '',
+      sortBy = 'fullName',
+      order = 'asc',
+      service = '',
+      organization = ''
+    } = req.query;
+
     const sortDirection = order === 'asc' ? 1 : -1;
 
-    const matchStage = {
-      $or: [
+    // $match conditions
+    const matchConditions = {};
+
+    if (search) {
+      matchConditions.$or = [
         { fullName: { $regex: search, $options: 'i' } },
         { phone: { $regex: search, $options: 'i' } },
-        { serviceType: { $regex: search, $options: 'i' } }
-      ]
-    };
+        { employeeCode: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    if (service) {
+      matchConditions.serviceType = service;
+    }
+
+    if (organization) {
+      matchConditions.organization = organization;
+    }
+
+    const lowerSortField = `sortField`;
 
     const result = await Helper.aggregate([
-      { $match: matchStage },
+      { $match: matchConditions },
+      {
+        $addFields: {
+          [lowerSortField]: {
+            $toLower: `$${sortBy}`
+          }
+        }
+      },
       {
         $facet: {
           data: [
-            { $sort: { [sortBy]: sortDirection } }
+            { $sort: { [lowerSortField]: sortDirection } },
+            { $project: { [lowerSortField]: 0 } } // remove temporary field
           ],
           count: [
             { $count: 'filteredCount' }
@@ -79,6 +109,7 @@ router.get('/', async (req, res) => {
       }
     ]);
 
+    console.log('Aggregation result:', result);
     const filteredResults = result[0].data;
     const filteredCount = result[0].count[0]?.filteredCount || 0;
     const totalCount = await Helper.countDocuments();
@@ -88,11 +119,16 @@ router.get('/', async (req, res) => {
       filteredCount,
       totalCount
     });
+
   } catch (err) {
-    console.error(err);
+    console.error('Aggregation error:', err);
     res.status(500).json({ error: 'Aggregation failed' });
   }
 });
+
+
+
+
 
 // GET: Single helper by ID
 router.get('/:id', async (req, res) => {

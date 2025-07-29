@@ -7,13 +7,27 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ToastrModule } from 'ngx-toastr';
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(),
-    importProvidersFrom(ReactiveFormsModule, MatIconModule,MatFormFieldModule, MatInputModule), provideAnimationsAsync(),
-
+    importProvidersFrom(
+      ReactiveFormsModule,
+      MatIconModule,
+      MatFormFieldModule,
+      MatInputModule,
+      ToastrModule.forRoot({
+        timeOut: 3000,
+        positionClass: 'toast-bottom-right',
+        preventDuplicates: true,
+        closeButton: true,
+        progressBar: true,
+        progressAnimation: 'decreasing',
+      })
+    ),
+    provideAnimationsAsync(),
   ]
 };
