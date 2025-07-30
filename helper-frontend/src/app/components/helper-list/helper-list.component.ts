@@ -18,14 +18,19 @@ import { ConfirmDeleteDialogComponent } from '../confirm-delete-dialog/confirm-d
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { FilterPanelComponent } from '../filter-panel/filter-panel.component';
-import { ToastrService } from 'ngx-toastr';
+
+
+import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
   standalone: true,
   selector: 'app-helper-list',
   templateUrl: './helper-list.component.html',
-  styleUrls: ['./helper-list.component.scss'],
+  styleUrls: ['./helper-list.component.css'],
   imports: [
     CommonModule,
     FormsModule,
@@ -38,7 +43,10 @@ import { ToastrService } from 'ngx-toastr';
     MatCardModule,
     MatButtonModule,
     ConfirmDeleteDialogComponent,
-    FilterPanelComponent
+    FilterPanelComponent,
+    ToastModule,
+    ButtonModule,
+    RippleModule
   ]
 })
 export class HelperListComponent implements OnInit {
@@ -52,7 +60,7 @@ export class HelperListComponent implements OnInit {
   totalCount = 0;
   filteredCount = 0;
 
-  constructor(private dialog: MatDialog, private helperService: HelperService, private snackBar: MatSnackBar,private ToastrService:ToastrService) { }
+  constructor(private dialog: MatDialog, private helperService: HelperService, private snackBar: MatSnackBar,private messageService: MessageService) { }
 
 
   searchTerm: string = '';
@@ -143,20 +151,11 @@ export class HelperListComponent implements OnInit {
     });
   }
 
-  // downloadHelpers() {
-  //   // Convert helpers to CSV or JSON and trigger download
-  //   const blob = new Blob([JSON.stringify(this.filteredHelpers)], { type: 'application/json' });
-  //   const url = window.URL.createObjectURL(blob);
-  //   const a = document.createElement('a');
-  //   a.href = url;
-  //   a.download = 'helpers.json';
-  //   a.click();
-  //   window.URL.revokeObjectURL(url);
-  // }
+  
 
   deleteHelper(id: string) {
-    const confirmed = confirm('Are you sure you want to delete this helper?');
-    if (!confirmed) return;
+    // const confirmed = confirm('Are you sure you want to delete this helper?');
+    // if (!confirmed) return;
 
     this.helperService.deleteHelper(id).subscribe(() => {
       this.fetchHelpers();  // Refresh the list
@@ -166,13 +165,8 @@ export class HelperListComponent implements OnInit {
         this.selectedHelper = null;
       }
 
-      this.ToastrService.success('Helper deleted successfully', 'Success');
-      // Optionally show a toast
-      // this.snackBar.open('Helper deleted successfully', 'Close', {
-      //   duration: 3000,
-      //   panelClass: 'success-snackbar'
-      // });
     });
+    this.messageService.add({ severity: 'error', summary: '', detail: 'Helper deleted successfully', key: 'br', life: 3000 });
   }
 
 }

@@ -15,7 +15,9 @@ export class ConfirmDeleteDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ConfirmDeleteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data:any
-  ) {}
+  ) {
+    // console.log('Dialog data:', data);
+  }
 
   confirmDelete() {
     this.dialogRef.close('confirm');  // pass string back to parent

@@ -12,10 +12,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatStepperModule } from '@angular/material/stepper';
 
 import { MatDialog } from '@angular/material/dialog';
+
 import { UploadDialogComponent } from '../upload-dialog/upload-dialog.component';
 import { SuccessDialogComponent } from '../success-dialog/success-dialog.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { SaveToastComponent } from '../save-toast/save-toast.component';
+
+
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+
 
 @Component({
   selector: 'app-helper-form',
@@ -32,10 +38,14 @@ import { SaveToastComponent } from '../save-toast/save-toast.component';
     MatStepperModule,
     UploadDialogComponent,
     SuccessDialogComponent,
-    SaveToastComponent
+    ToastModule,
+    ButtonModule,
+    RippleModule
+
   ],
   templateUrl: './helper-form.component.html',
-  styleUrls: ['./helper-form.component.scss']
+  styleUrls: ['./helper-form.component.scss'],
+  
 })
 
 export class HelperFormComponent implements OnInit {
@@ -51,12 +61,13 @@ export class HelperFormComponent implements OnInit {
   kycPreview: string | ArrayBuffer | null = null;
 
   constructor(
-    private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private fb: FormBuilder,
     private helperService: HelperService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
+
   ) { }
 
   openUploadDialog() {
@@ -92,7 +103,7 @@ export class HelperFormComponent implements OnInit {
       panelClass: 'custom-success-dialog',
       disableClose: true
     });
-    setTimeout(() => dialogRef.close(), 3000);
+    setTimeout(() => dialogRef.close(), 2000);
   }
 
   ngOnInit(): void {
@@ -183,15 +194,11 @@ export class HelperFormComponent implements OnInit {
     if (this.isEditMode) {
       this.helperService.updateHelper(this.id, formData).subscribe(() => {
         //alert('✅ Helper updated!');
+         
+        this.messageService.add({ severity: 'success', summary: 'success', detail: 'Changes updated', key: 'br', life: 3000 });
+    
         //this.showSuccessDialog(this.form.value.fullName);
-        this.snackBar.openFromComponent(SaveToastComponent, {
-          duration: 3000,
-          data: { message: 'Changes saved!' },
-          horizontalPosition: 'right',
-          verticalPosition: 'bottom',
-          panelClass: ['custom-toast-panel'] // important!
-        });
-
+        
         this.router.navigate(['/helpers']);
       });
     } else {
