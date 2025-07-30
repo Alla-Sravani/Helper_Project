@@ -10,6 +10,8 @@
 
 .form-container-box {
   display: flex;
+  width: 100%;
+  min-height: 400px;
   max-width: 1100px;
   margin: 30px auto;
   background: #fff;
@@ -366,3 +368,71 @@ button:hover {
 } */
 
 
+/* .step-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.step-navigation button {
+  min-width: 120px;
+} */
+
+
+.step-content-wrapper {
+  display: flex;
+  padding: 32px;
+  background: #fff;
+  height: 100%;
+}
+
+.additional-doc-upload-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.upload-section {
+  align-self: flex-start;
+}
+
+.doc-upload-box {
+  width: 120px;
+  height: 120px;
+  border: 2px dashed #180cbc;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.upload-icon {
+  font-size: 40px;
+  color: #4426dc;
+}
+
+.doc-filename {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.doc-upload-label {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.doc-hint {
+  font-size: 12px;
+  color: #777;
+}
+
+.step-navigation {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 300px;
+  gap: 20px;
+}

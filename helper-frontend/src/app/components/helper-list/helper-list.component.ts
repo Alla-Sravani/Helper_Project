@@ -69,7 +69,7 @@ export class HelperListComponent implements OnInit {
   currentFilters = { service: '', organization: '' };
 
   
-  allServices = ['Cooking', 'Cleaning', 'Security'];
+  allServices = ['Cook', 'Cleaner', 'Driver', 'Gardener'];
   allOrganizations = ['Org A', 'Org B', 'Org C'];
 
 
@@ -133,6 +133,7 @@ export class HelperListComponent implements OnInit {
 
   selectHelper(helper: any) {
     this.selectedHelper = helper;
+    console.log('Selected Helper:', this.selectedHelper);
   }
 
   // ✅ ADD THIS METHOD BELOW

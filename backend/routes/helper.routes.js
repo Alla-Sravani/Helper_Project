@@ -4,29 +4,48 @@ const path = require('path');
 const express = require('express');
 const router = express.Router();
 const Helper = require('../models/helper.model'); 
+const { upload } = require('../utils/uploadTos3');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = file.fieldname === 'photo' ? 'uploads/photos' : 'uploads/kyc';
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const name = file.fieldname + '-' + Date.now() + ext;
-    cb(null, name);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     const dir = file.fieldname === 'photo' ? 'uploads/photos' : 'uploads/kyc';
+//     cb(null, dir);
+//   },
+//   filename: (req, file, cb) => {
+//     const ext = path.extname(file.originalname);
+//     const name = file.fieldname + '-' + Date.now() + ext;
+//     cb(null, name);
+//   }
+// });
 
-const upload = multer({ storage });
+ 
 
 // POST: Create helper with photo and KYC
 router.post('/', upload.fields([{ name: 'photo' }, { name: 'kyc' }]), async (req, res) => {
   try {
-    const photoPath = req.files?.photo?.[0]?.path || '';
-    const kycPath = req.files?.kyc?.[0]?.path || '';
-    console.log( req.body);
-    req.body.employeeCode = Math.floor(Math.random() * 1000).toString(); // Generate a random employee code
+    // console.log('Received POST request with files:', req.files);
+    // console.log('Received POST request with body:', req.body);
+    // if (!req.files || !req.files.photo || !req.files.kyc) {
+    //   return res.status(400).json({ error: 'Both photo and KYC document are required' });
+    // }
+     let photoPath = '';
+     let kycPath = '';
+    if(req.files?.photo) {
+       photoPath = req.files?.photo[0].location || '';
+    }
 
+    if(req.files?.kyc && req.files.kyc.length > 0) {
+     kycPath = req.files?.kyc[0]?.location || '';
+
+    }
+      
+
+  
+    // console.log('photoPath files:', photoPath);
+    console.log('kycPath files:', kycPath);
+    // console.log( req.body);
+    req.body.employeeCode = Math.floor(Math.random() * 1000).toString(); // Generate a random employee code
+    // console.log()
     const newHelper = new Helper({
       employeeCode: req.body.employeeCode?.trim(),
       fullName: req.body.fullName?.trim(),
@@ -143,8 +162,8 @@ router.get('/:id', async (req, res) => {
 
 // PUT: Update helper details (with optional new photo/KYC)
 router.put('/:id', upload.fields([{ name: 'photo' }, { name: 'kyc' }]), async (req, res) => {
-  
   try {
+  
     const updateData = {
       employeeCode: req.body.employeeCode?.trim(),
       fullName: req.body.fullName?.trim(),
@@ -166,11 +185,11 @@ router.put('/:id', upload.fields([{ name: 'photo' }, { name: 'kyc' }]), async (r
     }
 
     if (req.files?.photo) {
-      updateData.photoUrl = req.files.photo[0].path;
+      updateData.photoUrl = req.files?.photo[0]?.location;
     }
 
     if (req.files?.kyc) {
-      updateData.kycDocumentUrl = req.files.kyc[0].path;
+      updateData.kycDocumentUrl = req.files?.kyc[0]?.location;
     }
 
     const updated = await Helper.findByIdAndUpdate(

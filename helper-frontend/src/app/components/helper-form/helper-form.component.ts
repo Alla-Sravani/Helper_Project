@@ -22,6 +22,9 @@ import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+
+
 
 @Component({
   selector: 'app-helper-form',
@@ -40,7 +43,8 @@ import { RippleModule } from 'primeng/ripple';
     SuccessDialogComponent,
     ToastModule,
     ButtonModule,
-    RippleModule
+    RippleModule,
+    
 
   ],
   templateUrl: './helper-form.component.html',
@@ -85,9 +89,6 @@ export class HelperFormComponent implements OnInit {
           this.kycPreview = reader.result;
         };
         reader.readAsDataURL(result.file);
-
-        // Optional: store document type if needed
-        // this.form.patchValue({ kycType: result.type });
 
         console.log('✅ File:', result.file);
         console.log('✅ Document Type:', result.type);
@@ -171,8 +172,8 @@ export class HelperFormComponent implements OnInit {
     }
     //console.log('🟡 submitForm triggered');
 
-    this.currentStep = 3;
-    this.isPreviewMode = true;
+    this.currentStep = 2;
+    //this.isPreviewMode = true;
   }
 
   // Final Submit to Backend
@@ -210,4 +211,43 @@ export class HelperFormComponent implements OnInit {
     }
 
   }
+additionalDocumentFile: File | null = null;
+additionalDocPreview: string | null = null;
+
+onAdditionalDocumentChange(event: Event): void {
+  const fileInput = event.target as HTMLInputElement;
+  const file = fileInput.files?.[0];
+
+  if (file) {
+    const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Only .pdf, .png, and .jpeg files are allowed.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size should not exceed 5MB.');
+      return;
+    }
+
+    this.additionalDocumentFile = file;
+    this.additionalDocPreview = file.name;
+  }
+}
+
+  goToPreviousStep() {
+  if (this.currentStep > 1) {
+    this.currentStep--;
+  }
+}
+
+goToNextStep() {
+  if (this.currentStep < 3) {
+    this.currentStep++;
+  }
+}
+
+onStepSelectionChange(event: StepperSelectionEvent) {
+  this.currentStep = event.selectedIndex + 1;
+}
 }

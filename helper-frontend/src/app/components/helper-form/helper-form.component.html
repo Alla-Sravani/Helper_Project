@@ -1,41 +1,41 @@
 <div class="form-container-box">
   <!-- Left Stepper Box -->
   <div class="stepper-box">
-  <mat-vertical-stepper [linear]="false" [selectedIndex]="currentStep - 1" class="custom-stepper">
-    
-    <mat-step [completed]="currentStep > 1">
-      <ng-template matStepLabel>
-        <div>
-          <div class="step-title">Helper Details</div>
-          <div class="step-subtitle">Add helper details</div>
-        </div>
-      </ng-template>
-    </mat-step>
+    <mat-vertical-stepper [linear]="false" [selectedIndex]="currentStep - 1" (selectionChange)="onStepSelectionChange($event)" class="custom-stepper">
 
-    <mat-step [completed]="currentStep > 2">
-      <ng-template matStepLabel>
-        <div>
-          <div class="step-title">Documents</div>
-          <div class="step-subtitle">Upload related documents</div>
-        </div>
-      </ng-template>
-    </mat-step>
+      <mat-step [completed]="currentStep > 1">
+        <ng-template matStepLabel>
+          <div>
+            <div class="step-title">Helper Details</div>
+            <div class="step-subtitle">Add helper details</div>
+          </div>
+        </ng-template>
+      </mat-step>
 
-    <mat-step>
-      <ng-template matStepLabel>
-        <div>
-          <div class="step-title">Review</div>
-          <div class="step-subtitle">Check the info and confirm</div>
-        </div>
-      </ng-template>
-    </mat-step>
+      <mat-step [completed]="currentStep > 2">
+        <ng-template matStepLabel>
+          <div>
+            <div class="step-title">Documents</div>
+            <div class="step-subtitle">Upload related documents</div>
+          </div>
+        </ng-template>
+      </mat-step>
 
-  </mat-vertical-stepper>
-</div>
+      <mat-step>
+        <ng-template matStepLabel>
+          <div>
+            <div class="step-title">Review</div>
+            <div class="step-subtitle">Check the info and confirm</div>
+          </div>
+        </ng-template>
+      </mat-step>
+
+    </mat-vertical-stepper>
+  </div>
 
 
   <!-- Step 1 & 2: Form Section -->
-  <div class="form-section-box" *ngIf="currentStep !== 3">
+  <div class="form-section-box" *ngIf="currentStep === 1">
     <h2>{{ isEditMode ? 'Edit Helper' : 'Add Helper' }}</h2>
 
     <form [formGroup]="form" (ngSubmit)="submitForm()">
@@ -143,25 +143,62 @@
       </div>
 
       <div class="kyc-upload-wrapper" (click)="openUploadDialog()">
-  <div class="kyc-box">
-    <img *ngIf="kycPreview" [src]="kycPreview" alt="KYC Preview" />
-    <mat-icon *ngIf="!kycPreview" class="upload-icon">insert_drive_file</mat-icon>
+        <div class="kyc-box">
+          <img *ngIf="kycPreview" [src]="kycPreview" alt="KYC Preview" />
+          <mat-icon *ngIf="!kycPreview" class="upload-icon">insert_drive_file</mat-icon>
+        </div>
+        <label class="kyc-upload-label">Upload KYC Document</label>
+        <small class="kyc-hint">Upload document (.png, .jpeg, .pdf) size 5 mb</small>
+      </div>
+
+
+      <button *ngIf="currentStep === 1" type="submit">
+        {{ isEditMode ? 'Update' : 'Add' }} Helper
+      </button>
+
+      <!-- Show this button only in Preview Mode (Step 3) -->
+      <!-- <button *ngIf="isPreviewMode" type="button" (click)="finalSubmit()">
+        Confirm & Submit
+      </button> -->
+    </form>
   </div>
-  <label class="kyc-upload-label">Upload KYC Document</label>
-  <small class="kyc-hint">Upload document (.png, .jpeg, .pdf) size 5 mb</small>
+
+
+     <!-- Step 2: Additional Document Upload -->
+<div *ngIf="currentStep === 2" class="step-content-wrapper">
+  <div class="additional-doc-upload-wrapper">
+
+    <!-- Upload Box -->
+    <div class="upload-section">
+      <div class="doc-upload-box" (click)="documentInput.click()">
+        <ng-container *ngIf="additionalDocPreview; else placeholder">
+          <span class="doc-filename">{{ additionalDocPreview }}</span>
+        </ng-container>
+        <ng-template #placeholder>
+          <mat-icon class="upload-icon">insert_drive_file</mat-icon>
+        </ng-template>
+      </div>
+
+      <input type="file" #documentInput hidden (change)="onAdditionalDocumentChange($event)" />
+      <label class="doc-upload-label">Upload Additional Document</label>
+      <small class="doc-hint">(.pdf, .jpeg, .png – Max 5MB)</small>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <!-- <div class="step-navigation">
+      <button mat-stroked-button color="primary" (click)="goToPreviousStep()">Previous</button>
+      <button mat-flat-button color="primary" (click)="goToNextStep()">Next</button>
+    </div> -->
+
+  </div>
+  <div class="step-navigation">
+      <button mat-stroked-button color="primary" (click)="goToPreviousStep()">Previous</button>
+      <button mat-flat-button color="primary" (click)="goToNextStep()">Next</button>
+    </div>
 </div>
 
 
-      <button *ngIf="!isPreviewMode" type="submit">
-  {{ isEditMode ? 'Update' : 'Add' }} Helper
-</button>
 
-<!-- Show this button only in Preview Mode (Step 3) -->
-<button *ngIf="isPreviewMode" type="button" (click)="finalSubmit()">
-  Confirm & Submit
-</button>
-    </form>
-  </div>
 
   <!-- Step 3: Preview Section -->
   <div class="form-section-box" *ngIf="currentStep === 3">
