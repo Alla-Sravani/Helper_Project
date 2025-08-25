@@ -3,14 +3,14 @@
 
   <mat-form-field appearance="fill" class="filter-field">
     <mat-label>Service</mat-label>
-    <mat-select [(ngModel)]="selectedService">
+    <mat-select [(ngModel)]="selectedService" multiple="true">
       <mat-option *ngFor="let service of services" [value]="service">{{ service }}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="filter-field">
     <mat-label>Organization</mat-label>
-    <mat-select [(ngModel)]="selectedOrganization">
+    <mat-select [(ngModel)]="selectedOrganization" multiple="true">
       <mat-option *ngFor="let org of organizations" [value]="org">{{ org }}</mat-option>
     </mat-select>
   </mat-form-field>

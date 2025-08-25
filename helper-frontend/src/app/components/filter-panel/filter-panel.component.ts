@@ -15,11 +15,11 @@ export class FilterPanelComponent {
   @Input() services: string[] = [];
   @Input() organizations: string[] = [];
 
-  @Output() applyFilter = new EventEmitter<{ service: string, organization: string }>();
+  @Output() applyFilter = new EventEmitter<{ service: string[], organization: string[] }>();
   @Output() resetFilter = new EventEmitter<void>();
 
-  selectedService: string = '';
-  selectedOrganization: string = '';
+  selectedService: string[] = [];
+  selectedOrganization: string[] = [];
  
 
   Onapply() {
@@ -27,8 +27,8 @@ export class FilterPanelComponent {
   }
 
   Onreset() {
-    this.selectedService = '';
-    this.selectedOrganization = '';
+    this.selectedService = [];
+    this.selectedOrganization = [];
     this.resetFilter.emit();
   }
 }

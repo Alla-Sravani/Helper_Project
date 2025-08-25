@@ -44,12 +44,12 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
     ToastModule,
     ButtonModule,
     RippleModule,
-    
+
 
   ],
   templateUrl: './helper-form.component.html',
   styleUrls: ['./helper-form.component.scss'],
-  
+
 })
 
 export class HelperFormComponent implements OnInit {
@@ -90,8 +90,8 @@ export class HelperFormComponent implements OnInit {
         };
         reader.readAsDataURL(result.file);
 
-        console.log('✅ File:', result.file);
-        console.log('✅ Document Type:', result.type);
+        console.log(' File:', result.file);
+        console.log('Document Type:', result.type);
       }
     });
   }
@@ -178,6 +178,7 @@ export class HelperFormComponent implements OnInit {
 
   // Final Submit to Backend
   finalSubmit() {
+    this.currentStep = 4;
     const formData = new FormData();
 
     for (const key in this.form.value) {
@@ -195,11 +196,11 @@ export class HelperFormComponent implements OnInit {
     if (this.isEditMode) {
       this.helperService.updateHelper(this.id, formData).subscribe(() => {
         //alert('✅ Helper updated!');
-         
+
         this.messageService.add({ severity: 'success', summary: 'success', detail: 'Changes updated', key: 'br', life: 3000 });
-    
+
         //this.showSuccessDialog(this.form.value.fullName);
-        
+
         this.router.navigate(['/helpers']);
       });
     } else {
@@ -211,43 +212,50 @@ export class HelperFormComponent implements OnInit {
     }
 
   }
-additionalDocumentFile: File | null = null;
-additionalDocPreview: string | null = null;
+  additionalDocumentFile: File | null = null;
+  additionalDocPreview: string | null = null;
 
-onAdditionalDocumentChange(event: Event): void {
-  const fileInput = event.target as HTMLInputElement;
-  const file = fileInput.files?.[0];
+  onAdditionalDocumentChange(event: Event): void {
+    const fileInput = event.target as HTMLInputElement;
+    const file = fileInput.files?.[0];
 
-  if (file) {
-    const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg'];
-    if (!allowedTypes.includes(file.type)) {
-      alert('Only .pdf, .png, and .jpeg files are allowed.');
-      return;
+    if (file) {
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size should not exceed 5MB.');
+        return;
+      }
+
+      this.additionalDocumentFile = file;
+      this.additionalDocPreview = file.name;
     }
-
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size should not exceed 5MB.');
-      return;
-    }
-
-    this.additionalDocumentFile = file;
-    this.additionalDocPreview = file.name;
   }
-}
 
   goToPreviousStep() {
-  if (this.currentStep > 1) {
-    this.currentStep--;
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
   }
-}
 
-goToNextStep() {
-  if (this.currentStep < 3) {
-    this.currentStep++;
+  goToNextStep() {
+    if (this.currentStep < 3) {
+      this.currentStep++;
+    }
   }
-}
 
-onStepSelectionChange(event: StepperSelectionEvent) {
-  this.currentStep = event.selectedIndex + 1;
-}
+  onStepSelectionChange(event: StepperSelectionEvent) {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      // this.currentStep=1;
+      // event.selectedIndex=0;
+    // console.log(this.currentStep);
+
+      // return;
+    }
+    else {
+      this.currentStep = event.selectedIndex + 1;
+    }
+    console.log(this.currentStep);
+
+  }
 }

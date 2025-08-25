@@ -55,8 +55,8 @@ export class HelperListComponent implements OnInit {
   search = '';
   sortBy = '';
   order = 'asc';
-  service = '';
-  organization = '';
+  service: string[] = [];
+  organization: string[] = [];
   totalCount = 0;
   filteredCount = 0;
 
@@ -66,21 +66,21 @@ export class HelperListComponent implements OnInit {
   searchTerm: string = '';
   sortOrder: string = 'asc'; 
   showFilter: boolean = false;
-  currentFilters = { service: '', organization: '' };
+  currentFilters = { service: [] as string[], organization: [] as string[] };
 
   
   allServices = ['Cook', 'Cleaner', 'Driver', 'Gardener'];
   allOrganizations = ['Org A', 'Org B', 'Org C'];
 
 
-  onApplyFilter(filter: { service: string, organization: string }) {
+  onApplyFilter(filter: { service: string[], organization: string[]}) {
     this.currentFilters = filter;
     console.log('Applied filters:', this.currentFilters);
     this.fetchHelpers();  // Trigger backend call
   }
 
   onResetFilter() {
-    this.currentFilters = { service: '', organization: '' };
+    this.currentFilters = { service: [], organization: [] };
     this.fetchHelpers();
   }
 
@@ -95,8 +95,8 @@ export class HelperListComponent implements OnInit {
       search: this.searchTerm,
       sortBy: this.sortBy,
       order: this.order,
-      service: this.currentFilters.service,
-      organization: this.currentFilters.organization,
+      service: this.currentFilters.service.join(','), // e.g. "Cook,Cleaner"
+      organization: this.currentFilters.organization.join(',') // e.g. "Org A,Org C"
     };
 
     this.helperService.getHelpers(params).subscribe((res) => {
@@ -119,15 +119,15 @@ export class HelperListComponent implements OnInit {
   this.fetchHelpers(); // or whatever method you're calling to update the list
 }
 
-  applyFilters(service: string, organization: string): void {
+  applyFilters(service: string[], organization: string[]): void {
     this.service = service;
     this.organization = organization;
     this.fetchHelpers();
   }
 
   resetFilters(): void {
-    this.service = '';
-    this.organization = '';
+    this.service = [];
+    this.organization = [];
     this.fetchHelpers();
   }
 
@@ -167,7 +167,7 @@ export class HelperListComponent implements OnInit {
       }
 
     });
-    this.messageService.add({ severity: 'error', summary: '', detail: 'Helper deleted successfully', key: 'br', life: 3000 });
+    this.messageService.add({ severity: 'error', summary: '', detail: `${this.selectedHelper.fullName} helper deleted `, key: 'br', life: 3000 });
   }
 
 }

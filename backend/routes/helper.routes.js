@@ -84,10 +84,9 @@ router.get('/', async (req, res) => {
     } = req.query;
 
     const sortDirection = order === 'asc' ? 1 : -1;
-
-    // $match conditions
     const matchConditions = {};
 
+    // Search
     if (search) {
       matchConditions.$or = [
         { fullName: { $regex: search, $options: 'i' } },
@@ -96,15 +95,21 @@ router.get('/', async (req, res) => {
       ];
     }
 
-    if (service) {
-      matchConditions.serviceType = service;
+    // Convert comma-separated strings to arrays
+    const serviceArray = service ? service.split(',') : [];
+    const organizationArray = organization ? organization.split(',') : [];
+
+    // Filter by services
+    if (serviceArray.length > 0) {
+      matchConditions.serviceType = { $in: serviceArray };
     }
 
-    if (organization) {
-      matchConditions.organization = organization;
+    // Filter by organizations
+    if (organizationArray.length > 0) {
+      matchConditions.organization = { $in: organizationArray };
     }
 
-    const lowerSortField = `sortField`;
+    const lowerSortField = 'sortField';
 
     const result = await Helper.aggregate([
       { $match: matchConditions },
@@ -119,7 +124,7 @@ router.get('/', async (req, res) => {
         $facet: {
           data: [
             { $sort: { [lowerSortField]: sortDirection } },
-            { $project: { [lowerSortField]: 0 } } // remove temporary field
+            { $project: { [lowerSortField]: 0 } }
           ],
           count: [
             { $count: 'filteredCount' }
@@ -128,7 +133,6 @@ router.get('/', async (req, res) => {
       }
     ]);
 
-    console.log('Aggregation result:', result);
     const filteredResults = result[0].data;
     const filteredCount = result[0].count[0]?.filteredCount || 0;
     const totalCount = await Helper.countDocuments();
@@ -144,9 +148,6 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Aggregation failed' });
   }
 });
-
-
-
 
 
 // GET: Single helper by ID
